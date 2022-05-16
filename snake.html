@@ -1,0 +1,106 @@
+<html>
+
+<body>
+
+<div id='field'> </div>
+<button id='left'> Влево </button>
+<button id='right'> Вправо </button>
+<button id='up'> Вверх </button>
+<button id='down'> Вниз </button>
+
+</body>
+
+<style>
+
+#field{
+	width: 800px;
+	height: 800px;
+	border: 1px solid red;
+	padding: 40px;
+}
+.cell{
+	width: 78px;
+	height: 78px;
+	border: 1px solid black;
+	background-color: gray;
+}
+button{
+	width: 100px;
+	height: 100px;
+}
+</style>
+
+<script>
+
+let field = document.querySelector('#field');
+let snake = [{'x' : 0, 'y' : 0}, {'x' : 0, 'y' : 1}, {'x' : 0, 'y' : 2}];
+let left = document.querySelector('#left');
+let right = document.querySelector('#right');
+let up = document.querySelector('#up');
+let down = document.querySelector('#down');
+let axis = 0;
+for(let l = 0; l < 10; l++)
+{
+	let outterDiv = document.createElement('div');
+	outterDiv.style.display = 'flex';
+	for(let c = 0; c < 10; c++)
+	{
+		let cell = document.createElement('div');
+		cell.className = 'cell';
+		cell.id = 'c' + l.toString() + c.toString();
+		outterDiv.appendChild(cell);
+
+	}
+	field.appendChild(outterDiv);
+}
+left.addEventListener('click', turnLeft);
+right.addEventListener('click', turnRight);
+up.addEventListener('click', turnUp);
+down.addEventListener('click', turnDown);
+setInterval(movement, 500);
+document.querySelector('#c00').style.backgroundColor = 'red';
+function movement(){
+	let point;
+	let sId;
+	switch (axis){
+		case 0:
+			sId = '#c' + (snake[snake.length-1].x) + (snake[snake.length-1].y+1);
+			point = {"x" : snake[snake.length-1].x, "y" : snake[snake.length-1].y + 1};
+			break;
+		case 1:
+			sId = '#c' + (snake[snake.length-1].x+1) + (snake[snake.length-1].y);
+			point = {"x" : snake[snake.length-1].x+1, "y" : snake[snake.length-1].y};
+			break;
+		case 2:
+			sId = '#c' + (snake[snake.length-1].x) + (snake[snake.length-1].y-1);
+			point = {"x" : snake[snake.length-1].x, "y" : snake[snake.length-1].y - 1};
+			break;
+		case 3:
+			sId = '#c' + (snake[snake.length-1].x-1) + (snake[snake.length-1].y);
+			point = {"x" : snake[snake.length-1].x-1, "y" : snake[snake.length-1].y};
+			break;
+	}
+	let lId = '#c' + snake[0].x + snake[0].y;
+	snake.push(point);
+	let hId = '#c' + snake[snake.length-2].x + snake[snake.length-2].y;
+	document.querySelector(sId).style.backgroundColor = 'orange';
+	document.querySelector(hId).style.backgroundColor = 'red';
+	document.querySelector(lId).style.backgroundColor = 'gray';
+	snake.shift();
+}
+function turnLeft(){
+	axis = 2;
+}
+function turnRight(){
+	axis = 0;
+}
+function turnUp(){
+	axis = 3;
+}
+function turnDown(){
+	axis = 1;
+}
+
+</script>
+
+</html>
