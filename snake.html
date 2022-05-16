@@ -39,6 +39,12 @@ let right = document.querySelector('#right');
 let up = document.querySelector('#up');
 let down = document.querySelector('#down');
 let axis = 0;
+
+let flag;
+let rX;
+let rY;
+
+
 for(let l = 0; l < 10; l++)
 {
 	let outterDiv = document.createElement('div');
@@ -58,7 +64,22 @@ right.addEventListener('click', turnRight);
 up.addEventListener('click', turnUp);
 down.addEventListener('click', turnDown);
 setInterval(movement, 500);
-document.querySelector('#c00').style.backgroundColor = 'red';
+for(let j = 0; j < snake.length; j++){
+	movement();
+}
+do{
+	rX = randomAxis();
+	rY = randomAxis();
+	flag = false;
+	for(let k = 0; k < snake.length; k++){
+		if((snake[k].x == rX)&&(snake[k].y == rY)){
+			flag = true;
+			break;
+		}
+	}
+}while(flag);
+let aId = '#c' + rX + rY;
+document.querySelector(aId).style.backgroundColor = 'green';
 function movement(){
 	let point;
 	let sId;
@@ -83,10 +104,31 @@ function movement(){
 	let lId = '#c' + snake[0].x + snake[0].y;
 	snake.push(point);
 	let hId = '#c' + snake[snake.length-2].x + snake[snake.length-2].y;
-	document.querySelector(sId).style.backgroundColor = 'orange';
-	document.querySelector(hId).style.backgroundColor = 'red';
 	document.querySelector(lId).style.backgroundColor = 'gray';
-	snake.shift();
+	document.querySelector(hId).style.backgroundColor = 'red';
+	document.querySelector(sId).style.backgroundColor = 'orange';
+	if(((snake[snake.length-1].x == rX)&&(snake[snake.length-1].y == rY))== false){
+		snake.shift();
+	}else{
+		do{
+			rX = randomAxis();
+			rY = randomAxis();
+			flag = false;
+			for(let k = 0; k < snake.length; k++){
+				if((snake[k].x == rX)&&(snake[k].y == rY)){
+				flag = true;
+				break;
+			}
+		}
+}while(flag);
+let aId = '#c' + rX + rY;
+document.querySelector(aId).style.backgroundColor = 'green';
+	}
+	for(let i = 0; i < snake.length - 1; i++){
+		if((snake[snake.length-1].x == snake[i].x)&&(snake[snake.length-1].y == snake[i].y)){
+			alert("Game over");
+		}
+	}
 }
 function turnLeft(){
 	axis = 2;
@@ -100,7 +142,9 @@ function turnUp(){
 function turnDown(){
 	axis = 1;
 }
-
+function randomAxis(){
+  return Math.floor(Math.random() * 10);
+}
 </script>
 
 </html>
