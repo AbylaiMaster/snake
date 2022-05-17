@@ -7,7 +7,12 @@
 <button id='right'> Вправо </button>
 <button id='up'> Вверх </button>
 <button id='down'> Вниз </button>
-<p id='score'> </p> 
+<button id='left2'> Влево </button>
+<button id='right2'> Вправо </button>
+<button id='up2'> Вверх </button>
+<button id='down2'> Вниз </button>
+<p id='score'> </p>
+<p id='score2'> </p>
 
 </body>
 
@@ -21,6 +26,13 @@ button{
 	width: 100px;
 	height: 100px;
 }
+#left,#right,#up,#down{
+	color: red;
+}
+#left2,#right2,#up2,#down2{
+	color: purple;
+}
+
 #score{
 	color: red;
 	font-size: 300px;
@@ -28,19 +40,34 @@ button{
 	left: 1000px;
 	bottom: 300px;
 }
+#score2{
+	color: purple;
+	font-size: 300px;
+	position: absolute;
+	left: 1600px;
+	bottom: 300px;
+}
+
 </style>
 
 <script>
 
 let field = document.querySelector('#field');
-let snake = [{'x' : 0, 'y' : 0}, {'x' : 0, 'y' : 1}, {'x' : 0, 'y' : 2}];
 let left = document.querySelector('#left');
 let right = document.querySelector('#right');
 let up = document.querySelector('#up');
 let down = document.querySelector('#down');
+let left2 = document.querySelector('#left2');
+let right2 = document.querySelector('#right2');
+let up2 = document.querySelector('#up2');
+let down2 = document.querySelector('#down2');
+
 let axis = 0;
+let axis2 = 2;
 let score = document.querySelector('#score');
+let score2 = document.querySelector('#score2');
 score.innerHTML = 3;
+score2.innerHTML = 3;
 let flag;
 let rX;
 let rY;
@@ -61,8 +88,25 @@ document.addEventListener("keypress", function(event) {
 		turnRight();
 	}
 });
+document.addEventListener("keypress", function(event) {
+	if(event.keyCode == 105){
+		turnUp2();
+	}
+	else if(event.keyCode == 106){
+		turnLeft2();
+	}
+	else if(event.keyCode == 107){
+		turnDown2();
+	}
+	else if(event.keyCode == 108){
+		turnRight2();
+	}
+});
 
 
+
+let snake1 = [{'x' : 0, 'y' : 0}, {'x' : 0, 'y' : 1}, {'x' : 0, 'y' : 2}];
+let snake2 = [{'x' : size-1, 'y' : size-1}, {'x' : size-1, 'y' : size-2}, {'x' : size-1, 'y' : size-3}];
 
 
 for(let l = 0; l < size; l++)
@@ -85,16 +129,21 @@ left.addEventListener('click', turnLeft);
 right.addEventListener('click', turnRight);
 up.addEventListener('click', turnUp);
 down.addEventListener('click', turnDown);
+left2.addEventListener('click', turnLeft2);
+right2.addEventListener('click', turnRight2);
+up2.addEventListener('click', turnUp2);
+down2.addEventListener('click', turnDown2);
+
 setInterval(movement, 300);
-for(let j = 0; j < snake.length; j++){
-	
-}
+setTimeout(function(){
+	setInterval(movement2, 300);
+}, 150);
 do{
 	rX = randomAxis();
 	rY = randomAxis();
 	flag = false;
-	for(let k = 0; k < snake.length; k++){
-		if((snake[k].x == rX)&&(snake[k].y == rY)){
+	for(let k = 0; k < snake1.length; k++){
+		if((snake1[k].x == rX)&&(snake1[k].y == rY)){
 			flag = true;
 			break;
 		}
@@ -107,43 +156,33 @@ function movement(){
 	let sId;
 	switch (axis){
 		case 0:
-			sId = '#c' + (snake[snake.length-1].x) + 'l' +(snake[snake.length-1].y+1);
-			point = {"x" : snake[snake.length-1].x, "y" : snake[snake.length-1].y + 1};
+			sId = '#c' + (snake1[snake1.length-1].x) + 'l' +(snake1[snake1.length-1].y+1);
+			point = {"x" : snake1[snake1.length-1].x, "y" : snake1[snake1.length-1].y + 1};
 			break;
 		case 1:
-			sId = '#c' + (snake[snake.length-1].x+1) + 'l' +(snake[snake.length-1].y);
-			point = {"x" : snake[snake.length-1].x+1, "y" : snake[snake.length-1].y};
+			sId = '#c' + (snake1[snake1.length-1].x+1) + 'l' +(snake1[snake1.length-1].y);
+			point = {"x" : snake1[snake1.length-1].x+1, "y" : snake1[snake1.length-1].y};
 			break;
 		case 2:
-			sId = '#c' + (snake[snake.length-1].x) + 'l' +(snake[snake.length-1].y-1);
-			point = {"x" : snake[snake.length-1].x, "y" : snake[snake.length-1].y - 1};
+			sId = '#c' + (snake1[snake1.length-1].x) + 'l' +(snake1[snake1.length-1].y-1);
+			point = {"x" : snake1[snake1.length-1].x, "y" : snake1[snake1.length-1].y - 1};
 			break;
 		case 3:
-			sId = '#c' + (snake[snake.length-1].x-1) + 'l' +(snake[snake.length-1].y);
-			point = {"x" : snake[snake.length-1].x-1, "y" : snake[snake.length-1].y};
+			sId = '#c' + (snake1[snake1.length-1].x-1) + 'l' +(snake1[snake1.length-1].y);
+			point = {"x" : snake1[snake1.length-1].x-1, "y" : snake1[snake1.length-1].y};
 			break;
 	}
-	if((snake[snake.length-1].x>=size)||(snake[snake.length-1].y>=size)||(snake[snake.length-1].x<0)||(snake[snake.length-1].y<0)){
-		alert("Game over");
-		snake = [{'x' : 0, 'y' : 0}, {'x' : 0, 'y' : 1}, {'x' : 0, 'y' : 2}];
-		axis = 0;
-		for(let l = 0; l<size;l++){
-				for(let m = 0; m<size;m++)
-				{
-					let nId = '#c' + l + 'l' + m;
-					document.querySelector(aId).style.backgroundColor = 'cyan';
-				}
-			}
-		return;
+	if((snake1[snake1.length-1].x>=size)||(snake1[snake1.length-1].y>=size)||(snake1[snake1.length-1].x<0)||(snake1[snake1.length-1].y<0)){
+		alert("Game over, winner is purple");
 	}
-	let lId = '#c' + snake[0].x + 'l' +snake[0].y;
-	snake.push(point);
-	let hId = '#c' + snake[snake.length-2].x + 'l' +snake[snake.length-2].y;
+	let lId = '#c' + snake1[0].x + 'l' +snake1[0].y;
+	snake1.push(point);
+	let hId = '#c' + snake1[snake1.length-2].x + 'l' +snake1[snake1.length-2].y;
 	document.querySelector(lId).style.backgroundColor = 'cyan';
 	document.querySelector(hId).style.backgroundColor = 'red';
 	document.querySelector(sId).style.backgroundColor = 'orange';
-	if(((snake[snake.length-1].x == rX)&&(snake[snake.length-1].y == rY))== false){
-		snake.shift();
+	if(((snake1[snake1.length-1].x == rX)&&(snake1[snake1.length-1].y == rY))== false){
+		snake1.shift();
 	}
 	else
 	{
@@ -151,30 +190,100 @@ function movement(){
 			rX = randomAxis();
 			rY = randomAxis();
 			flag = false;
-			for(let k = 0; k < snake.length; k++){
-				if((snake[k].x == rX)&&(snake[k].y == rY)){
-				flag = true;
-				break;
+			for(let k = 0; k < snake1.length; k++){
+				if((snake1[k].x == rX)&&(snake1[k].y == rY)){
+					flag = true;
+					break;
+				}
 			}
-		}
-	}while(flag);
+			for(let k = 0; k < snake2.length; k++){
+				if((snake2[k].x == rX)&&(snake2[k].y == rY)){
+					flag = true;
+					break;
+				}
+			}
+		}while(flag);
+	
 	score.innerHTML++;
 	let aId = '#c' + rX + 'l' + rY;
 	document.querySelector(aId).style.backgroundColor = 'green';
 	}
-	for(let i = 0; i < snake.length - 1; i++){
-		if((snake[snake.length-1].x == snake[i].x)&&(snake[snake.length-1].y == snake[i].y)){
-			alert("Game over");
-			snake = [{'x' : 0, 'y' : 0}, {'x' : 0, 'y' : 1}, {'x' : 0, 'y' : 2}];
-			axis = 0;
-			for(let l = 0; l<size;l++){
-				for(let m = 0; m<size;m++)
-				{
-					let nId = '#c' + l + 'l' + m;
-					document.querySelector(aId).style.backgroundColor = 'cyan';
+	for(let i = 0; i < snake1.length - 1; i++){
+		if((snake1[snake1.length-1].x == snake2[i].x)&&(snake1[snake1.length-1].y == snake2[i].y)){
+			alert("Game over, winner is red");
+		}
+	}
+	for(let i = 0; i < snake2.length - 1; i++){
+		if((snake2[snake2.length-1].x == snake2[i].x)&&(snake2[snake2.length-1].y == snake2[i].y)){
+			alert("Game over, winner is red");
+		}
+	}
+}
+function movement2(){
+	let point;
+	let sId;
+	switch (axis2){
+		case 0:
+			sId = '#c' + (snake2[snake2.length-1].x) + 'l' +(snake2[snake2.length-1].y+1);
+			point = {"x" : snake2[snake2.length-1].x, "y" : snake2[snake2.length-1].y + 1};
+			break;
+		case 1:
+			sId = '#c' + (snake2[snake2.length-1].x+1) + 'l' +(snake2[snake2.length-1].y);
+			point = {"x" : snake2[snake2.length-1].x+1, "y" : snake2[snake2.length-1].y};
+			break;
+		case 2:
+			sId = '#c' + (snake2[snake2.length-1].x) + 'l' +(snake2[snake2.length-1].y-1);
+			point = {"x" : snake2[snake2.length-1].x, "y" : snake2[snake2.length-1].y - 1};
+			break;
+		case 3:
+			sId = '#c' + (snake2[snake2.length-1].x-1) + 'l' +(snake2[snake2.length-1].y);
+			point = {"x" : snake2[snake2.length-1].x-1, "y" : snake2[snake2.length-1].y};
+			break;
+	}
+	if((snake2[snake2.length-1].x>=size)||(snake2[snake2.length-1].y>=size)||(snake2[snake2.length-1].x<0)||(snake2[snake2.length-1].y<0)){
+		alert("Game over, winner is red");
+	}
+	let lId = '#c' + snake2[0].x + 'l' +snake2[0].y;
+	snake2.push(point);
+	let hId = '#c' + snake2[snake2.length-2].x + 'l' +snake2[snake2.length-2].y;
+	document.querySelector(lId).style.backgroundColor = 'cyan';
+	document.querySelector(hId).style.backgroundColor = 'purple';
+	document.querySelector(sId).style.backgroundColor = 'yellow';
+	if(((snake2[snake2.length-1].x == rX)&&(snake2[snake2.length-1].y == rY))== false){
+		snake2.shift();
+	}
+	else
+	{
+		do{
+			rX = randomAxis();
+			rY = randomAxis();
+			flag = false;
+			for(let k = 0; k < snake1.length; k++){
+				if((snake1[k].x == rX)&&(snake1[k].y == rY)){
+					flag = true;
+					break;
 				}
 			}
-			return;
+			for(let k = 0; k < snake2.length; k++){
+				if((snake2[k].x == rX)&&(snake2[k].y == rY)){
+					flag = true;
+					break;
+				}
+			}
+		}while(flag);
+	
+	score2.innerHTML++;
+	let aId = '#c' + rX + 'l' + rY;
+	document.querySelector(aId).style.backgroundColor = 'green';
+	}
+	for(let i = 0; i < snake1.length - 1; i++){
+		if((snake1[snake1.length-1].x == snake1[i].x)&&(snake1[snake1.length-1].y == snake1[i].y)){
+			alert("Game over, winner is purple");
+		}
+	}
+	for(let i = 0; i < snake2.length - 1; i++){
+		if((snake2[snake2.length-1].x == snake1[i].x)&&(snake2[snake2.length-1].y == snake1[i].y)){
+			alert("Game over, winner is purple");
 		}
 	}
 }
@@ -198,6 +307,27 @@ function turnDown(){
 	axis = 1;
 	}
 }
+function turnLeft2(){
+	if(axis2!=0){
+		axis2 = 2;
+	}
+}
+function turnRight2(){
+	if(axis2!=2){
+	axis2 = 0;
+	}
+}
+function turnUp2(){
+	if(axis2!=1){
+	axis2 = 3;
+	}
+}
+function turnDown2(){
+	if(axis2!=3){
+	axis2 = 1;
+	}
+}
+
 function randomAxis(){
   return Math.floor(Math.random() * size);
 }
