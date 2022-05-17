@@ -7,26 +7,26 @@
 <button id='right'> Вправо </button>
 <button id='up'> Вверх </button>
 <button id='down'> Вниз </button>
+<p id='score'> </p> 
 
 </body>
 
 <style>
 
-#field{
-	width: 800px;
-	height: 800px;
-	border: 1px solid red;
-	padding: 40px;
-}
 .cell{
-	width: 78px;
-	height: 78px;
 	border: 1px solid black;
 	background-color: gray;
 }
 button{
 	width: 100px;
 	height: 100px;
+}
+#score{
+	color: red;
+	font-size: 300px;
+	position: absolute;
+	left: 1000px;
+	bottom: 450px;
 }
 </style>
 
@@ -39,21 +39,43 @@ let right = document.querySelector('#right');
 let up = document.querySelector('#up');
 let down = document.querySelector('#down');
 let axis = 0;
-
+let score = document.querySelector('#score');
+score.innerHTML = 3;
 let flag;
 let rX;
 let rY;
+let size = 20;
 
 
-for(let l = 0; l < 10; l++)
+document.addEventListener("keypress", function(event) {
+	if(event.keyCode == 119){
+		turnUp();
+	}
+	else if(event.keyCode == 97){
+		turnLeft();
+	}
+	else if(event.keyCode == 115){
+		turnDown();
+	}
+	else if(event.keyCode == 100){
+		turnRight();
+	}
+});
+
+
+
+
+for(let l = 0; l < size; l++)
 {
 	let outterDiv = document.createElement('div');
 	outterDiv.style.display = 'flex';
-	for(let c = 0; c < 10; c++)
+	for(let c = 0; c < size; c++)
 	{
 		let cell = document.createElement('div');
 		cell.className = 'cell';
 		cell.id = 'c' + l.toString() + c.toString();
+		cell.style.width = 800/size;
+		cell.style.height = 800/size;
 		outterDiv.appendChild(cell);
 
 	}
@@ -65,7 +87,7 @@ up.addEventListener('click', turnUp);
 down.addEventListener('click', turnDown);
 setInterval(movement, 500);
 for(let j = 0; j < snake.length; j++){
-	movement();
+	
 }
 do{
 	rX = randomAxis();
@@ -101,6 +123,12 @@ function movement(){
 			point = {"x" : snake[snake.length-1].x-1, "y" : snake[snake.length-1].y};
 			break;
 	}
+	if((snake[snake.length-1].x>=size)||(snake[snake.length-1].y>=size)||(snake[snake.length-1].x<0)||(snake[snake.length-1].y<0)){
+		alert("Game over");
+		snake = [{'x' : 0, 'y' : 0}, {'x' : 0, 'y' : 1}, {'x' : 0, 'y' : 2}];
+		axis = 0;
+		return;
+	}
 	let lId = '#c' + snake[0].x + snake[0].y;
 	snake.push(point);
 	let hId = '#c' + snake[snake.length-2].x + snake[snake.length-2].y;
@@ -109,7 +137,9 @@ function movement(){
 	document.querySelector(sId).style.backgroundColor = 'orange';
 	if(((snake[snake.length-1].x == rX)&&(snake[snake.length-1].y == rY))== false){
 		snake.shift();
-	}else{
+	}
+	else
+	{
 		do{
 			rX = randomAxis();
 			rY = randomAxis();
@@ -120,13 +150,16 @@ function movement(){
 				break;
 			}
 		}
-}while(flag);
-let aId = '#c' + rX + rY;
-document.querySelector(aId).style.backgroundColor = 'green';
+	}while(flag);
+	score.innerHTML++;
+	let aId = '#c' + rX + rY;
+	document.querySelector(aId).style.backgroundColor = 'green';
 	}
 	for(let i = 0; i < snake.length - 1; i++){
 		if((snake[snake.length-1].x == snake[i].x)&&(snake[snake.length-1].y == snake[i].y)){
 			alert("Game over");
+			snake = [{'x' : 0, 'y' : 0}, {'x' : 0, 'y' : 1}, {'x' : 0, 'y' : 2}];
+			axis = 0;
 		}
 	}
 }
