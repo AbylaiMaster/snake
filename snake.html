@@ -15,7 +15,7 @@
 
 .cell{
 	border: 1px solid black;
-	background-color: gray;
+	background-color: cyan;
 }
 button{
 	width: 100px;
@@ -26,7 +26,7 @@ button{
 	font-size: 300px;
 	position: absolute;
 	left: 1000px;
-	bottom: 450px;
+	bottom: 300px;
 }
 </style>
 
@@ -44,7 +44,7 @@ score.innerHTML = 3;
 let flag;
 let rX;
 let rY;
-let size = 20;
+let size = 10;
 
 
 document.addEventListener("keypress", function(event) {
@@ -73,7 +73,7 @@ for(let l = 0; l < size; l++)
 	{
 		let cell = document.createElement('div');
 		cell.className = 'cell';
-		cell.id = 'c' + l.toString() + c.toString();
+		cell.id = 'c' + l.toString() + 'l' + c.toString();
 		cell.style.width = 800/size;
 		cell.style.height = 800/size;
 		outterDiv.appendChild(cell);
@@ -85,7 +85,7 @@ left.addEventListener('click', turnLeft);
 right.addEventListener('click', turnRight);
 up.addEventListener('click', turnUp);
 down.addEventListener('click', turnDown);
-setInterval(movement, 500);
+setInterval(movement, 300);
 for(let j = 0; j < snake.length; j++){
 	
 }
@@ -100,26 +100,26 @@ do{
 		}
 	}
 }while(flag);
-let aId = '#c' + rX + rY;
+let aId = '#c' + rX + 'l' + rY;
 document.querySelector(aId).style.backgroundColor = 'green';
 function movement(){
 	let point;
 	let sId;
 	switch (axis){
 		case 0:
-			sId = '#c' + (snake[snake.length-1].x) + (snake[snake.length-1].y+1);
+			sId = '#c' + (snake[snake.length-1].x) + 'l' +(snake[snake.length-1].y+1);
 			point = {"x" : snake[snake.length-1].x, "y" : snake[snake.length-1].y + 1};
 			break;
 		case 1:
-			sId = '#c' + (snake[snake.length-1].x+1) + (snake[snake.length-1].y);
+			sId = '#c' + (snake[snake.length-1].x+1) + 'l' +(snake[snake.length-1].y);
 			point = {"x" : snake[snake.length-1].x+1, "y" : snake[snake.length-1].y};
 			break;
 		case 2:
-			sId = '#c' + (snake[snake.length-1].x) + (snake[snake.length-1].y-1);
+			sId = '#c' + (snake[snake.length-1].x) + 'l' +(snake[snake.length-1].y-1);
 			point = {"x" : snake[snake.length-1].x, "y" : snake[snake.length-1].y - 1};
 			break;
 		case 3:
-			sId = '#c' + (snake[snake.length-1].x-1) + (snake[snake.length-1].y);
+			sId = '#c' + (snake[snake.length-1].x-1) + 'l' +(snake[snake.length-1].y);
 			point = {"x" : snake[snake.length-1].x-1, "y" : snake[snake.length-1].y};
 			break;
 	}
@@ -127,12 +127,19 @@ function movement(){
 		alert("Game over");
 		snake = [{'x' : 0, 'y' : 0}, {'x' : 0, 'y' : 1}, {'x' : 0, 'y' : 2}];
 		axis = 0;
+		for(let l = 0; l<size;l++){
+				for(let m = 0; m<size;m++)
+				{
+					let nId = '#c' + l + 'l' + m;
+					document.querySelector(aId).style.backgroundColor = 'cyan';
+				}
+			}
 		return;
 	}
-	let lId = '#c' + snake[0].x + snake[0].y;
+	let lId = '#c' + snake[0].x + 'l' +snake[0].y;
 	snake.push(point);
-	let hId = '#c' + snake[snake.length-2].x + snake[snake.length-2].y;
-	document.querySelector(lId).style.backgroundColor = 'gray';
+	let hId = '#c' + snake[snake.length-2].x + 'l' +snake[snake.length-2].y;
+	document.querySelector(lId).style.backgroundColor = 'cyan';
 	document.querySelector(hId).style.backgroundColor = 'red';
 	document.querySelector(sId).style.backgroundColor = 'orange';
 	if(((snake[snake.length-1].x == rX)&&(snake[snake.length-1].y == rY))== false){
@@ -152,7 +159,7 @@ function movement(){
 		}
 	}while(flag);
 	score.innerHTML++;
-	let aId = '#c' + rX + rY;
+	let aId = '#c' + rX + 'l' + rY;
 	document.querySelector(aId).style.backgroundColor = 'green';
 	}
 	for(let i = 0; i < snake.length - 1; i++){
@@ -160,20 +167,36 @@ function movement(){
 			alert("Game over");
 			snake = [{'x' : 0, 'y' : 0}, {'x' : 0, 'y' : 1}, {'x' : 0, 'y' : 2}];
 			axis = 0;
+			for(let l = 0; l<size;l++){
+				for(let m = 0; m<size;m++)
+				{
+					let nId = '#c' + l + 'l' + m;
+					document.querySelector(aId).style.backgroundColor = 'cyan';
+				}
+			}
+			return;
 		}
 	}
 }
 function turnLeft(){
-	axis = 2;
+	if(axis!=0){
+		axis = 2;
+	}
 }
 function turnRight(){
+	if(axis!=2){
 	axis = 0;
+	}
 }
 function turnUp(){
+	if(axis!=1){
 	axis = 3;
+	}
 }
 function turnDown(){
+	if(axis!=3){
 	axis = 1;
+	}
 }
 function randomAxis(){
   return Math.floor(Math.random() * size);
