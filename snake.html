@@ -81,18 +81,19 @@ let up2 = document.querySelector('#up2');
 let down2 = document.querySelector('#down2');
 let timer = document.querySelector('#timer');
 let deathmatch = document.querySelector('#deathmatch');
-
-let axis = 0;
-let axis2 = 2;
 let score = document.querySelector('#score');
 let score2 = document.querySelector('#score2');
-score.innerHTML = 3;
-score2.innerHTML = 3;
 let flag;
 let rX;
 let rY;
-let size = 40;
 
+let axis = 0;
+let axis2 = 2;
+score.innerHTML = 3;
+score2.innerHTML = 3;
+let size = 40;
+let apples = [];
+let amountOfApples = 3;
 
 document.addEventListener("keypress", function(event) {
 	if(event.keyCode == 119){
@@ -156,13 +157,15 @@ down2.addEventListener('click', turnDown2);
 
 seconds = 0;
 minutes = 1;
-setInterval(function(){
+let timerStart = setInterval(function(){
 	if((seconds == 0)&&(minutes == 0)){
 		if(score.innerHTML>score2.innerHTML){
 			alert("Game over, winner is	red");
+			clearInterval(timerStart);
 		}
 		else if(score.innerHTML<score2.innerHTML){
 			alert("Game over, winner is	purple");
+			clearInterval(timerStart);
 		}
 		else{
 		timer.style.color = 'white';
@@ -189,19 +192,9 @@ setInterval(movement, 100);
 setTimeout(function(){
 	setInterval(movement2, 100);
 }, 50);
-do{
-	rX = randomAxis();
-	rY = randomAxis();
-	flag = false;
-	for(let k = 0; k < snake1.length; k++){
-		if((snake1[k].x == rX)&&(snake1[k].y == rY)){
-			flag = true;
-			break;
-		}
-	}
-}while(flag);
-let aId = '#c' + rX + 'l' + rY;
-document.querySelector(aId).style.backgroundColor = 'green';
+for(let i = 0; i<amountOfApples;i++){
+	addApple();
+}
 function movement(){
 	let point;
 	let sId;
@@ -224,7 +217,11 @@ function movement(){
 			break;
 	}
 	if((snake1[snake1.length-1].x>=size)||(snake1[snake1.length-1].y>=size)||(snake1[snake1.length-1].x<0)||(snake1[snake1.length-1].y<0)){
-		alert("Game over, winner is purple");
+		clearInterval(movement);
+		if(score.innerHTML<score2.innerHTML){
+			alert("Game over, winner is	purple");
+			clearInterval(timerStart);
+		}
 	}
 	let lId = '#c' + snake1[0].x + 'l' +snake1[0].y;
 	snake1.push(point);
@@ -232,41 +229,39 @@ function movement(){
 	document.querySelector(lId).style.backgroundColor = '#008888';
 	document.querySelector(hId).style.backgroundColor = 'red';
 	document.querySelector(sId).style.backgroundColor = 'orange';
-	if(((snake1[snake1.length-1].x == rX)&&(snake1[snake1.length-1].y == rY))== false){
-		snake1.shift();
+	let flag2 = false;
+	let keepJ;
+	for(let j = 0;j<apples.length;j++){
+		if((snake1[snake1.length-1].x == apples[j].x)&&(snake1[snake1.length-1].y == apples[j].y)){
+			flag2 = true;
+			keepJ = j;
+			break;
+		}
 	}
-	else
-	{
-		do{
-			rX = randomAxis();
-			rY = randomAxis();
-			flag = false;
-			for(let k = 0; k < snake1.length; k++){
-				if((snake1[k].x == rX)&&(snake1[k].y == rY)){
-					flag = true;
-					break;
-				}
-			}
-			for(let k = 0; k < snake2.length; k++){
-				if((snake2[k].x == rX)&&(snake2[k].y == rY)){
-					flag = true;
-					break;
-				}
-			}
-		}while(flag);
-	
-	score.innerHTML++;
-	let aId = '#c' + rX + 'l' + rY;
-	document.querySelector(aId).style.backgroundColor = 'green';
+	if(flag2){
+		apples.splice(keepJ,1);
+		addApple();
+		score.innerHTML++;
+	}
+	else{
+		snake1.shift();
 	}
 	for(let i = 0; i < snake2.length; i++){
 		if((snake1[snake1.length-1].x == snake2[i].x)&&(snake1[snake1.length-1].y == snake2[i].y)){
-			alert("Game over, winner is purple");
+			clearInterval(movement);
+			if(score.innerHTML<score2.innerHTML){
+				alert("Game over, winner is	purple");
+				clearInterval(timerStart);
+			}
 		}
 	}
-	for(let i = 0; i < snake2.length-1; i++){
-		if((snake2[snake2.length-1].x == snake2[i].x)&&(snake2[snake2.length-1].y == snake2[i].y)){
-			alert("Game over, winner is red");
+	for(let i = 0; i < snake1.length-1; i++){
+		if((snake1[snake1.length-1].x == snake1[i].x)&&(snake1[snake1.length-1].y == snake1[i].y)){
+			clearInterval(movement);
+			if(score.innerHTML<score2.innerHTML){
+				alert("Game over, winner is	purple");
+				clearInterval(timerStart);
+			}
 		}
 	}
 }
@@ -292,7 +287,11 @@ function movement2(){
 			break;
 	}
 	if((snake2[snake2.length-1].x>=size)||(snake2[snake2.length-1].y>=size)||(snake2[snake2.length-1].x<0)||(snake2[snake2.length-1].y<0)){
-		alert("Game over, winner is red");
+		clearInterval(movement2);
+		if(score.innerHTML>score2.innerHTML){
+			alert("Game over, winner is	red");
+			clearInterval(timerStart);
+		}
 	}
 	let lId = '#c' + snake2[0].x + 'l' +snake2[0].y;
 	snake2.push(point);
@@ -300,41 +299,39 @@ function movement2(){
 	document.querySelector(lId).style.backgroundColor = '#008888';
 	document.querySelector(hId).style.backgroundColor = 'purple';
 	document.querySelector(sId).style.backgroundColor = 'yellow';
-	if(((snake2[snake2.length-1].x == rX)&&(snake2[snake2.length-1].y == rY))== false){
+	let flag2 = false;
+	let keepJ;
+	for(let j = 0;j<apples.length;j++){
+		if((snake2[snake2.length-1].x == apples[j].x)&&(snake2[snake2.length-1].y == apples[j].y)){
+			flag2 = true;
+			keepJ = j;
+			break;
+		}
+	}
+	if(flag2){
+		apples.splice(keepJ,1);
+		addApple();
+		score2.innerHTML++;
+	}
+	else{
 		snake2.shift();
 	}
-	else
-	{
-		do{
-			rX = randomAxis();
-			rY = randomAxis();
-			flag = false;
-			for(let k = 0; k < snake1.length; k++){
-				if((snake1[k].x == rX)&&(snake1[k].y == rY)){
-					flag = true;
-					break;
-				}
+	for(let i = 0; i < snake2.length-1; i++){
+		if((snake2[snake2.length-1].x == snake2[i].x)&&(snake2[snake2.length-1].y == snake2[i].y)){
+			clearInterval(movement2);
+			if(score.innerHTML>score2.innerHTML){
+				alert("Game over, winner is	red");
+				clearInterval(timerStart);
 			}
-			for(let k = 0; k < snake2.length; k++){
-				if((snake2[k].x == rX)&&(snake2[k].y == rY)){
-					flag = true;
-					break;
-				}
-			}
-		}while(flag);
-	
-	score2.innerHTML++;
-	let aId = '#c' + rX + 'l' + rY;
-	document.querySelector(aId).style.backgroundColor = 'green';
-	}
-	for(let i = 0; i < snake1.length-1; i++){
-		if((snake1[snake1.length-1].x == snake1[i].x)&&(snake1[snake1.length-1].y == snake1[i].y)){
-			alert("Game over, winner is purple");
 		}
 	}
 	for(let i = 0; i < snake1.length; i++){
 		if((snake2[snake2.length-1].x == snake1[i].x)&&(snake2[snake2.length-1].y == snake1[i].y)){
-			alert("Game over, winner is red");
+			clearInterval(movement2);
+			if(score.innerHTML>score2.innerHTML){
+				alert("Game over, winner is	red");
+				clearInterval(timerStart);
+			}
 		}
 	}
 }
@@ -378,7 +375,35 @@ function turnDown2(){
 	axis2 = 1;
 	}
 }
-
+function addApple(){
+	do{
+		rX = randomAxis();
+		rY = randomAxis();
+		flag = false;
+		for(let k = 0; k < snake1.length; k++){
+			if((snake1[k].x == rX)&&(snake1[k].y == rY)){
+				flag = true;
+				break;
+			}
+		}
+		for(let k = 0; k < snake2.length; k++){
+			if((snake2[k].x == rX)&&(snake2[k].y == rY)){
+				flag = true;
+				break;
+			}
+		}
+		for(let k = 0; k<apples.length;k++){
+			if((apples[k].x == rX)&&(apples[k].y == rY)){
+				flag = true;
+				break;
+			}
+		}
+	}while(flag);
+	let aId = '#c' + rX + 'l' + rY;
+	let appleAxis = {"x" : rX, "y" : rY};
+	document.querySelector(aId).style.backgroundColor = 'green';
+	apples.push(appleAxis);
+}
 function randomAxis(){
   return Math.floor(Math.random() * size);
 }
