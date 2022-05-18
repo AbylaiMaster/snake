@@ -13,14 +13,16 @@
 <button id='down2'> Вниз </button>
 <p id='score'> </p>
 <p id='score2'> </p>
+<p id='timer'> </p>
+<p id='deathmatch'> </p>
 
 </body>
 
 <style>
 
 .cell{
-	border: 1px solid black;
-	background-color: cyan;
+	border: 1px solid #00aaaa;
+	background-color: #008888;
 }
 button{
 	width: 100px;
@@ -47,6 +49,22 @@ button{
 	left: 1600px;
 	bottom: 300px;
 }
+#timer{
+	color: black;
+	font-size: 300px;
+	position: absolute;
+	left: 1100px;
+	bottom: 100px;
+}
+#deathmatch{
+	color: black;
+	font-size: 100px;
+	position: absolute;
+	left: 1125px;
+	top: 200px;
+}
+
+
 
 </style>
 
@@ -61,6 +79,8 @@ let left2 = document.querySelector('#left2');
 let right2 = document.querySelector('#right2');
 let up2 = document.querySelector('#up2');
 let down2 = document.querySelector('#down2');
+let timer = document.querySelector('#timer');
+let deathmatch = document.querySelector('#deathmatch');
 
 let axis = 0;
 let axis2 = 2;
@@ -71,7 +91,7 @@ score2.innerHTML = 3;
 let flag;
 let rX;
 let rY;
-let size = 10;
+let size = 40;
 
 
 document.addEventListener("keypress", function(event) {
@@ -134,10 +154,41 @@ right2.addEventListener('click', turnRight2);
 up2.addEventListener('click', turnUp2);
 down2.addEventListener('click', turnDown2);
 
-setInterval(movement, 300);
+seconds = 0;
+minutes = 1;
+setInterval(function(){
+	if((seconds == 0)&&(minutes == 0)){
+		if(score.innerHTML>score2.innerHTML){
+			alert("Game over, winner is	red");
+		}
+		else if(score.innerHTML<score2.innerHTML){
+			alert("Game over, winner is	purple");
+		}
+		else{
+		timer.style.color = 'white';
+		deathmatch.innerHTML = 'Deathmatch';
+		}
+	}
+	else{
+		if(seconds == 0){
+			minutes--;
+			seconds = 59;
+		}
+		else{
+			seconds--;
+		}
+		if(seconds<10){
+			timer.innerHTML = minutes + ":0" + seconds;
+		}
+		else{
+			timer.innerHTML = minutes + ":" + seconds;
+		}
+	}
+},1000);
+setInterval(movement, 100);
 setTimeout(function(){
-	setInterval(movement2, 300);
-}, 150);
+	setInterval(movement2, 100);
+}, 50);
 do{
 	rX = randomAxis();
 	rY = randomAxis();
@@ -178,7 +229,7 @@ function movement(){
 	let lId = '#c' + snake1[0].x + 'l' +snake1[0].y;
 	snake1.push(point);
 	let hId = '#c' + snake1[snake1.length-2].x + 'l' +snake1[snake1.length-2].y;
-	document.querySelector(lId).style.backgroundColor = 'cyan';
+	document.querySelector(lId).style.backgroundColor = '#008888';
 	document.querySelector(hId).style.backgroundColor = 'red';
 	document.querySelector(sId).style.backgroundColor = 'orange';
 	if(((snake1[snake1.length-1].x == rX)&&(snake1[snake1.length-1].y == rY))== false){
@@ -208,12 +259,12 @@ function movement(){
 	let aId = '#c' + rX + 'l' + rY;
 	document.querySelector(aId).style.backgroundColor = 'green';
 	}
-	for(let i = 0; i < snake1.length - 1; i++){
+	for(let i = 0; i < snake2.length; i++){
 		if((snake1[snake1.length-1].x == snake2[i].x)&&(snake1[snake1.length-1].y == snake2[i].y)){
-			alert("Game over, winner is red");
+			alert("Game over, winner is purple");
 		}
 	}
-	for(let i = 0; i < snake2.length - 1; i++){
+	for(let i = 0; i < snake2.length-1; i++){
 		if((snake2[snake2.length-1].x == snake2[i].x)&&(snake2[snake2.length-1].y == snake2[i].y)){
 			alert("Game over, winner is red");
 		}
@@ -246,7 +297,7 @@ function movement2(){
 	let lId = '#c' + snake2[0].x + 'l' +snake2[0].y;
 	snake2.push(point);
 	let hId = '#c' + snake2[snake2.length-2].x + 'l' +snake2[snake2.length-2].y;
-	document.querySelector(lId).style.backgroundColor = 'cyan';
+	document.querySelector(lId).style.backgroundColor = '#008888';
 	document.querySelector(hId).style.backgroundColor = 'purple';
 	document.querySelector(sId).style.backgroundColor = 'yellow';
 	if(((snake2[snake2.length-1].x == rX)&&(snake2[snake2.length-1].y == rY))== false){
@@ -276,14 +327,14 @@ function movement2(){
 	let aId = '#c' + rX + 'l' + rY;
 	document.querySelector(aId).style.backgroundColor = 'green';
 	}
-	for(let i = 0; i < snake1.length - 1; i++){
+	for(let i = 0; i < snake1.length-1; i++){
 		if((snake1[snake1.length-1].x == snake1[i].x)&&(snake1[snake1.length-1].y == snake1[i].y)){
 			alert("Game over, winner is purple");
 		}
 	}
-	for(let i = 0; i < snake2.length - 1; i++){
+	for(let i = 0; i < snake1.length; i++){
 		if((snake2[snake2.length-1].x == snake1[i].x)&&(snake2[snake2.length-1].y == snake1[i].y)){
-			alert("Game over, winner is purple");
+			alert("Game over, winner is red");
 		}
 	}
 }
