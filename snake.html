@@ -3,18 +3,11 @@
 <body>
 
 <div id='field'> </div>
-<button id='left'> Влево </button>
-<button id='right'> Вправо </button>
-<button id='up'> Вверх </button>
-<button id='down'> Вниз </button>
-<button id='left2'> Влево </button>
-<button id='right2'> Вправо </button>
-<button id='up2'> Вверх </button>
-<button id='down2'> Вниз </button>
 <p id='score'> </p>
 <p id='score2'> </p>
 <p id='timer'> </p>
 <p id='deathmatch'> </p>
+<p> WASD - red snake, IJKL - purple snake </p>
 
 </body>
 
@@ -23,17 +16,12 @@
 .cell{
 	border: 1px solid #888888;
 }
-button{
-	width: 100px;
-	height: 100px;
-}
 #left,#right,#up,#down{
 	color: red;
 }
 #left2,#right2,#up2,#down2{
 	color: purple;
 }
-
 #score{
 	color: red;
 	font-size: 300px;
@@ -60,13 +48,12 @@ button{
 	font-size: 100px;
 	position: absolute;
 	left: 1125px;
-	top: 200px;
+	bottom: 100px;
 }
 
 </style>
 
 <script>
-
 let field = document.querySelector('#field');
 let left = document.querySelector('#left');
 let right = document.querySelector('#right');
@@ -89,10 +76,16 @@ let axis = 0;
 let axis2 = 2;
 score.innerHTML = 0;
 score2.innerHTML = 0;
-let size = 40;
-let apples = [];
-let amountOfApples = 5;
 let appleValue = 1;
+let apples = [];
+
+// You can change these parameters:
+let size = 40;
+let amountOfApples = 5;
+let speed = 10;
+let bg = '#008888';
+let seconds = 0;
+let minutes = 1;
 
 document.addEventListener("keypress", function(event) {
 	if(event.keyCode == 119){
@@ -147,18 +140,6 @@ for(let l = 0; l < size; l++)
 
 }
 let allCells = document.querySelectorAll('.cell');
-left.addEventListener('click', turnLeft);
-right.addEventListener('click', turnRight);
-up.addEventListener('click', turnUp);
-down.addEventListener('click', turnDown);
-left2.addEventListener('click', turnLeft2);
-right2.addEventListener('click', turnRight2);
-up2.addEventListener('click', turnUp2);
-down2.addEventListener('click', turnDown2);
-
-let bg = '#008888';
-seconds = 0;
-minutes = 1;
 let flag3;
 for(let i = 0; i < allCells.length; i++){
 	flag3 = true;
@@ -244,10 +225,10 @@ let timerStart = setInterval(function(){
 	}
 	
 },1000);
-setInterval(movement, 100);
+setInterval(movement, 1000/speed);
 setTimeout(function(){
-	setInterval(movement2, 100);
-}, 50);
+	setInterval(movement2, 1000/speed);
+}, 500/speed);
 for(let i = 0; i<amountOfApples;i++){
 	addApple();
 }
@@ -284,7 +265,6 @@ function movement(){
 	let hId = '#c' + snake1[snake1.length-2].x + 'l' +snake1[snake1.length-2].y;
 	document.querySelector(lId).style.backgroundColor = bg;
 	document.querySelector(hId).style.backgroundColor = 'red';
-	//console.log(sId);
 	document.querySelector(sId).style.backgroundColor = 'orange';
 	let flag2 = false;
 	let keepJ;
