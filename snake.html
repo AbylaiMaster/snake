@@ -21,8 +21,7 @@
 <style>
 
 .cell{
-	border: 1px solid #00aaaa;
-	background-color: #008888;
+	border: 1px solid #888888;
 }
 button{
 	width: 100px;
@@ -85,13 +84,15 @@ let flag;
 let rX;
 let rY;
 
+
 let axis = 0;
 let axis2 = 2;
-score.innerHTML = 3;
-score2.innerHTML = 3;
+score.innerHTML = 0;
+score2.innerHTML = 0;
 let size = 40;
 let apples = [];
-let amountOfApples = 3;
+let amountOfApples = 5;
+let appleValue = 1;
 
 document.addEventListener("keypress", function(event) {
 	if(event.keyCode == 119){
@@ -143,7 +144,9 @@ for(let l = 0; l < size; l++)
 
 	}
 	field.appendChild(outterDiv);
+
 }
+let allCells = document.querySelectorAll('.cell');
 left.addEventListener('click', turnLeft);
 right.addEventListener('click', turnRight);
 up.addEventListener('click', turnUp);
@@ -153,8 +156,24 @@ right2.addEventListener('click', turnRight2);
 up2.addEventListener('click', turnUp2);
 down2.addEventListener('click', turnDown2);
 
+let bg = '#008888';
 seconds = 0;
 minutes = 1;
+let flag3;
+for(let i = 0; i < allCells.length; i++){
+	flag3 = true;
+	for(let j = 0; j<apples.length; j++){
+		if(apples[j].y+apples[j].x*40 == i){
+			flag3 = false;
+		}
+	}
+	if(flag3){
+		allCells[i].style.backgroundColor = bg;
+	}
+	else{
+		allCells[i].style.backgroundColor = 'green';
+	}
+}
 let timerStart = setInterval(function(){
 	if((seconds == 0)&&(minutes == 0)){
 		if(score.innerHTML>score2.innerHTML){
@@ -185,6 +204,45 @@ let timerStart = setInterval(function(){
 			timer.innerHTML = minutes + ":" + seconds;
 		}
 	}
+	if(minutes == 0){
+		if(seconds == 30){
+			appleValue = 2;
+			bg = '#AA5500';
+			for(let i = 0; i < allCells.length; i++){
+				flag3 = true;
+				for(let j = 0; j<apples.length; j++){
+					if(apples[j].y+apples[j].x*40 == i){
+						flag3 = false;
+					}
+				}
+				if(flag3){
+					allCells[i].style.backgroundColor = bg;
+				}
+				else{
+					allCells[i].style.backgroundColor = 'green';
+				}
+			}
+		}
+		else if(seconds == 10){
+			appleValue = 3;
+			bg = '#FF007F';
+			for(let i = 0; i < allCells.length; i++){
+				flag3 = true;
+				for(let j = 0; j<apples.length; j++){
+					if(apples[j].y+apples[j].x*40 == i){
+						flag3 = false;
+					}
+				}
+				if(flag3){
+					allCells[i].style.backgroundColor = bg;
+				}
+				else{
+					allCells[i].style.backgroundColor = 'green';
+				}
+			}
+		}
+	}
+	
 },1000);
 setInterval(movement, 100);
 setTimeout(function(){
@@ -224,8 +282,9 @@ function movement(){
 	let lId = '#c' + snake1[0].x + 'l' +snake1[0].y;
 	snake1.push(point);
 	let hId = '#c' + snake1[snake1.length-2].x + 'l' +snake1[snake1.length-2].y;
-	document.querySelector(lId).style.backgroundColor = '#008888';
+	document.querySelector(lId).style.backgroundColor = bg;
 	document.querySelector(hId).style.backgroundColor = 'red';
+	//console.log(sId);
 	document.querySelector(sId).style.backgroundColor = 'orange';
 	let flag2 = false;
 	let keepJ;
@@ -239,7 +298,7 @@ function movement(){
 	if(flag2){
 		apples.splice(keepJ,1);
 		addApple();
-		score.innerHTML++;
+		score.innerHTML = parseInt(appleValue) + parseInt(score.innerHTML);
 	}
 	else{
 		snake1.shift();
@@ -294,7 +353,7 @@ function movement2(){
 	let lId = '#c' + snake2[0].x + 'l' +snake2[0].y;
 	snake2.push(point);
 	let hId = '#c' + snake2[snake2.length-2].x + 'l' +snake2[snake2.length-2].y;
-	document.querySelector(lId).style.backgroundColor = '#008888';
+	document.querySelector(lId).style.backgroundColor = bg;
 	document.querySelector(hId).style.backgroundColor = 'purple';
 	document.querySelector(sId).style.backgroundColor = 'yellow';
 	let flag2 = false;
@@ -309,7 +368,7 @@ function movement2(){
 	if(flag2){
 		apples.splice(keepJ,1);
 		addApple();
-		score2.innerHTML++;
+		score2.innerHTML = parseInt(appleValue) + parseInt(score2.innerHTML);
 	}
 	else{
 		snake2.shift();
