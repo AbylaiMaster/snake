@@ -172,7 +172,7 @@ let timerStart = setInterval(function(){
 		for(let i = 0; i < allCells.length; i++){
 			flag3 = true;
 			for(let j = 0; j<apples.length; j++){
-				if(apples[j].y+apples[j].x*40 == i){
+				if(apples[j].y+apples[j].x*size == i){
 					flag3 = false;
 				}
 			}
@@ -192,7 +192,7 @@ let timerStart = setInterval(function(){
 		for(let i = 0; i < allCells.length; i++){
 			flag3 = true;
 			for(let j = 0; j<apples.length; j++){
-				if(apples[j].y+apples[j].x*40 == i){
+				if(apples[j].y+apples[j].x*size == i){
 					flag3 = false;
 				}
 			}
