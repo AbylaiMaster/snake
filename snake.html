@@ -258,14 +258,6 @@ function movement(){
 			break;
 		}
 	}
-	if(flag2){
-		apples.splice(keepJ,1);
-		addApple();
-		score.innerHTML = parseInt(appleValue) + parseInt(score.innerHTML);
-	}
-	else{
-		snake1.shift();
-	}
 	for(let i = 0; i < snake2.length; i++){
 		if((snake1[snake1.length-1].x == snake2[i].x)&&(snake1[snake1.length-1].y == snake2[i].y)){
 			clearInterval(movement);
@@ -283,6 +275,14 @@ function movement(){
 				clearInterval(timerStart);
 			}
 		}
+	}
+	if(flag2){
+		apples.splice(keepJ,1);
+		addApple();
+		score.innerHTML = parseInt(appleValue) + parseInt(score.innerHTML);
+	}
+	else{
+		snake1.shift();
 	}
 }
 function movement2(){
@@ -328,14 +328,6 @@ function movement2(){
 			break;
 		}
 	}
-	if(flag2){
-		apples.splice(keepJ,1);
-		addApple();
-		score2.innerHTML = parseInt(appleValue) + parseInt(score2.innerHTML);
-	}
-	else{
-		snake2.shift();
-	}
 	for(let i = 0; i < snake2.length-1; i++){
 		if((snake2[snake2.length-1].x == snake2[i].x)&&(snake2[snake2.length-1].y == snake2[i].y)){
 			clearInterval(movement2);
@@ -353,6 +345,14 @@ function movement2(){
 				clearInterval(timerStart);
 			}
 		}
+	}
+	if(flag2){
+		apples.splice(keepJ,1);
+		addApple();
+		score2.innerHTML = parseInt(appleValue) + parseInt(score2.innerHTML);
+	}
+	else{
+		snake2.shift();
 	}
 }
 function turnLeft(){
